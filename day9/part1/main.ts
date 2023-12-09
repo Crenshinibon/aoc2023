@@ -209,21 +209,31 @@ const readings = input.split("\n").map( l => {
 })
 
 const project = (reading:number[]):number => {
-  const lastNumbers = [ reading[reading.length - 1] ];
+  const lines:number[][] = [];
   
   let current = reading;
   let keepGoing = true;
   while(keepGoing) {
-    
+  
+    lines.push(current)  
     const next = nextLine(current) 
-    lastNumbers.push(next[next.length - 1])
     if (next.reduce( (s, e) => { return s + e }, 0) == 0) keepGoing = false;
-
     current = next;
   }
-  const projected = lastNumbers.reduce( (s, e) => { s +=  e; return s}, 0);
-  console.log( reading.join(" "), projected)
-  return projected;
+
+  const reversed = lines.reverse()
+  let prevLast = 0
+  const completed = reversed.map( (r) => {
+    prevLast = prevLast + r[r.length - 1]
+    const cRow = [...r, prevLast]
+    //console.log(r.join(' '))
+    
+    return cRow
+  });
+  completed.forEach(a => console.log(a.join(' ')))
+
+  const final = completed[ completed.length - 1]
+  return final[ final.length - 1 ];
 }
 
 const nextLine = (line:number[]):number[] => {
@@ -248,4 +258,5 @@ readings.forEach( (l) => {
   sum += p
 })
 
+//project( readings[1] )
 console.log(sum)
